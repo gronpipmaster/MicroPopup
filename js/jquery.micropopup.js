@@ -11,14 +11,18 @@
 			methods.data = $( this )
 			methods.settings  = { image: true }
 			
-			if( $( '.popup-overlay' ).length == 0 )
-				$( 'body' ).append( '<div class="popup-overlay"></div>' )
+			if( $( '.micropopup-overlay' ).length == 0 )
+				$( 'body' ).append( '<div class="micropopup-overlay" />' )
 				
-			if( $( '.container-popup' ).length == 0 )
-				$( 'body' ).append( '<div class="container-popup"><div class="inner"></div><div class="controls"></div><div class="close"></div></div>' )
-			
-			methods.container = $( '.container-popup' )
-			methods.overlay = $( '.popup-overlay' )
+			if( $( '.micropopup-container' ).length == 0 )
+				$( 'body' ).append( '<div class="micropopup-container"><div class="inner"></div><div class="controls"></div><div class="close"></div></div>' )
+				
+			if( $( '.micropopup-loader' ).length == 0 )
+				$( 'body' ).append( '<div class="micropopup-loader" />' )
+
+			methods.loader = $( '.micropopup-loader' )
+			methods.container = $( '.micropopup-container' )
+			methods.overlay = $( '.micropopup-overlay' )
 			
 			if( ! popup.settings.image ){
 				methods.settings.image = false
@@ -40,8 +44,6 @@
 		open : function ( content, url ){
 			$( 'body' ).css({ 'overflow-x':'hidden' })
 			methods.container.find( '.inner' ).html( content )
-			methods.position()
-			
 			
 			setTimeout( function(){
 				methods.position()
@@ -49,22 +51,16 @@
 			
 			if( this.settings.image ) {
 				
-				$( content ).each(function(){
-					var src = this.src
-					this.src = '#'
-					this.src = src
-					$( this ).load( function(){
-
-
-
-						methods.slidingBind()
-						methods.container.find( '.controls' ).show()
-
-						
-
+				$( content ).load(function(){
+					methods.container.css({
+						width: methods.container.width(),
+						height: methods.container.height()
 					})
 				})
+				methods.slidingBind()
+				methods.container.find( '.controls' ).show()
 			}
+			
 			methods.overlay.show()
 			methods.container.show()
 			
@@ -78,7 +74,6 @@
 			
 			methods.container.find( 'form' ).attr( 'action', url )
 			
-// 			clearTimeout( loadposition )
 
 		},
 		close : function (){
@@ -98,7 +93,9 @@
 
 					left = left / 2 + $( window ).scrollLeft()
 					top  = top  / 2 + $( window ).scrollTop()
-
+					
+				console.log()
+				
 				methods.container.css({
 					top: Math.max( top, 0 ),
 					left: Math.max( left, 0)
@@ -116,26 +113,7 @@
 				return false
 			})
 		},
-		slidingAction : function ( link ) {
-			
-			this.settings.first = methods.data.first().attr('data-index')
-			this.settings.last  = methods.data.last().attr('data-index')
-			this.settings.prev  = $( '[data-index=' + ( parseInt( link.attr('data-index')) - 1 ) + ']' )
-			this.settings.next  = $( '[data-index=' + ( parseInt( link.attr('data-index')) + 1 ) + ']' )
-			
-			if( link.attr('data-index') == this.settings.first )
-				this.settings.prev = false
-			if( link.attr('data-index') == this.settings.last )
-				this.settings.next = false
-				
-			this.settings.image = true
-			
-			methods.open( '<img src="' + link.attr('href') + '" class="resp"/>', link.attr('href') )
-			
-		},
 		slidingBind : function(){
-			
-			console.log(  )
 			
 			if( ! this.settings.prev || this.settings.prev.length == 0 )
 				var prev = ''
@@ -154,6 +132,29 @@
 				return false
 			})
 			
+		},
+ 		slidingAction : function ( link ) {
+
+			this.settings.first = methods.data.first().attr('data-index')
+			this.settings.last  = methods.data.last().attr('data-index')
+			this.settings.prev  = $( '[data-index=' + ( parseInt( link.attr('data-index')) - 1 ) + ']' )
+			this.settings.next  = $( '[data-index=' + ( parseInt( link.attr('data-index')) + 1 ) + ']' )
+
+			if( link.attr('data-index') == this.settings.first )
+				this.settings.prev = false
+			if( link.attr('data-index') == this.settings.last )
+				this.settings.next = false
+
+			this.settings.image = true
+
+			methods.open( '<img src="' + link.attr('href') + '" class="resp"/>', link.attr('href') )
+
+		},
+		openLoader : function (){
+			methods.loader.show()
+		},
+		closeLoader : function (){
+			methods.loader.hide()
 		}
 	}
 	
