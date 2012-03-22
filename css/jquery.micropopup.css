@@ -1,12 +1,11 @@
 
 .micropopup-overlay{ position: fixed; top: 0; left: 0; bottom: 0; right: 0; z-index: 990; display: none; overflow: auto;   opacity: 0.8; background-color: #000; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";}
 
-.micropopup-container { background-color: #fff; position: absolute;box-shadow: 0px 5px 20px #333; -webkit-box-shadow: 0 5px 20px #333; -moz-box-shadow: 0 5px 20px #333; z-index: 991; color: #000; width:auto;border-radius:10px; -webkit-border-radius:10px;-moz-border-radius:10px;display:none;padding:8px;overflow:hidden;}
+.micropopup-container { background-color: #fff; position: absolute;box-shadow: 0px 5px 20px #333; -webkit-box-shadow: 0 5px 20px #333; -moz-box-shadow: 0 5px 20px #333; z-index: 991; color: #000; width:auto;border-radius:10px; -webkit-border-radius:10px;-moz-border-radius:10px;display:none;padding:8px;overflow:auto;}
 
 .micropopup-container h1 { margin: 30px 40px 30px 0; font-size: 24px; border:0;}
 .micropopup-container .inner { width:auto;height:auto;}
-.micropopup-container .inner.html{ width:600px; margin:auto;padding:8px;}
-.micropopup-container .inner .form{width:600px;margin:0 20px 20px;}
+.micropopup-container .inner.html{ width:600px; margin:8px;}
 
 .micropopup-container .inner img.resp{display:block;margin:auto;height:100%;width:auto;}
 .micropopup-container .controls{position:absolute;top:0;width:100%;height:100%;margin: 0 0 -8px -8px;display:none;}
