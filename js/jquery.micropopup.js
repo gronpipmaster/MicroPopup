@@ -49,23 +49,7 @@
 			methods.container.find( '.inner' ).html( content )
 			methods.container.attr('style', '')
 			
-			if( methods.settings.image ) {
-				methods.container.find( '.inner' ).removeClass('html')
-				methods.slidingBind()
-				methods.container.find( '.controls' ).show()
-				$( content ).load(function(){
-					dfd.done(function(){
-						methods.position()
-					}).done(function(){
-						methods.closeLoader()
-						methods.overlay.show()
-						methods.container.fadeIn(200)
-					})
-				})
-				
-			} else {
-				methods.container.find( '.inner' ).addClass('html')
-				methods.container.find( '.controls' ).hide()
+			var showActions = function(){
 				dfd.done(function(){
 					methods.position()
 				}).done(function(){
@@ -73,6 +57,20 @@
 					methods.overlay.show()
 					methods.container.fadeIn(200)
 				})
+			}
+			
+			if( methods.settings.image ) {
+				methods.container.find( '.inner' ).removeClass('html')
+				methods.container.find( '.controls' ).show()
+				methods.slidingBind()
+				$( content ).load(function(){
+					showActions()
+				})
+				
+			} else {
+				methods.container.find( '.inner' ).addClass('html')
+				methods.container.find( '.controls' ).hide()
+				showActions()
 			}
 			
 			methods.overlay.click( function(){
