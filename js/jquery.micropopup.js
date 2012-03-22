@@ -11,27 +11,28 @@
 			methods.data = $( this )
 			methods.settings  = { image: true }
 			
-			if( $( '.micropopup-overlay' ).length == 0 )
-				$( 'body' ).append( '<div class="micropopup-overlay" />' )
-				
-			if( $( '.micropopup-container' ).length == 0 )
-				$( 'body' ).append( '<div class="micropopup-container"><div class="inner"></div><div class="controls"></div><div class="close"></div></div>' )
-				
-			if( $( '.micropopup-loader' ).length == 0 )
-				$( 'body' ).append( '<div class="micropopup-loader" />' )
-
 			methods.loader = $( '.micropopup-loader' )
 			methods.container = $( '.micropopup-container' )
 			methods.overlay = $( '.micropopup-overlay' )
 			
+			if( methods.overlay.length == 0 )
+				$( 'body' ).append( '<div class="micropopup-overlay" />' )
+				
+			if( methods.container.length == 0 )
+				$( 'body' ).append( '<div class="micropopup-container"><div class="inner"></div><div class="controls"></div><div class="close"></div></div>' )
+				
+			if( methods.loader.length == 0 )
+				$( 'body' ).append( '<div class="micropopup-loader" />' )
+
+			
+			
 			if( ! popup.settings.image ){
-				methods.settings.image = false
 				methods.data.click( function(){
 					var url = this.href
 					
 					$.get( url, function( data ){
+							methods.settings.image = false
 							methods.open( data, url )
-							
 							if( popup.settings.callback != 'function (){}' ) popup.settings.callback()
 					})
 					
@@ -42,27 +43,37 @@
 			}
 		},
 		open : function ( content, url ){
-			$( 'body' ).css({ 'overflow-x':'hidden' })
+			var dfd = $.Deferred()
+			methods.openLoader()
+			
 			methods.container.find( '.inner' ).html( content )
+			methods.container.attr('style', '')
 			
-			setTimeout( function(){
-				methods.position()
-			}, 100 )
-			
-			if( this.settings.image ) {
-				
-				$( content ).load(function(){
-					methods.container.css({
-						width: methods.container.width(),
-						height: methods.container.height()
-					})
-				})
+			if( methods.settings.image ) {
+				methods.container.find( '.inner' ).removeClass('html')
 				methods.slidingBind()
 				methods.container.find( '.controls' ).show()
+				$( content ).load(function(){
+					dfd.done(function(){
+						methods.position()
+					}).done(function(){
+						methods.closeLoader()
+						methods.overlay.show()
+						methods.container.fadeIn(200)
+					})
+				})
+				
+			} else {
+				methods.container.find( '.inner' ).addClass('html')
+				methods.container.find( '.controls' ).hide()
+				dfd.done(function(){
+					methods.position()
+				}).done(function(){
+					methods.closeLoader()
+					methods.overlay.show()
+					methods.container.fadeIn(200)
+				})
 			}
-			
-			methods.overlay.show()
-			methods.container.show()
 			
 			methods.overlay.click( function(){
 				methods.close()
@@ -74,7 +85,8 @@
 			
 			methods.container.find( 'form' ).attr( 'action', url )
 			
-
+			dfd.resolve()
+			
 		},
 		close : function (){
 			methods.overlay.hide()
@@ -82,24 +94,30 @@
 				methods.container.hide()
 				$( this ).remove()
 			})
-			
-			$( 'body' ).css({ 'overflow-x':'visible' })
 		},
 		position : function (){
 			methods.container.setPosition = function () {
-				
+				if( methods.settings.image ) {
+					methods.container.height( $( window ).height() - 80 )
+
+					methods.container.find('img.resp').css({
+						height: methods.container.height()
+					})
+				} 
 				var     left = $( window ).width()  - methods.container.width(),
 					top  = $( window ).height() - methods.container.height()
 
 					left = left / 2 + $( window ).scrollLeft()
 					top  = top  / 2 + $( window ).scrollTop()
-					
-				console.log()
 				
 				methods.container.css({
 					top: Math.max( top, 0 ),
-					left: Math.max( left, 0)
+					left: Math.max( left, 0),
+					width: methods.container.width(),
+					height: methods.container.height()
 				})
+
+
 			}
 			
 			methods.container.setPosition()
@@ -144,10 +162,14 @@
 				this.settings.prev = false
 			if( link.attr('data-index') == this.settings.last )
 				this.settings.next = false
-
-			this.settings.image = true
-
-			methods.open( '<img src="' + link.attr('href') + '" class="resp"/>', link.attr('href') )
+			
+			methods.settings.image = true
+			
+			image = new Image
+			image.src = link.attr('href')
+			$( image ).attr( 'class', 'resp' )
+			
+			methods.open( image, link.attr('href') )
 
 		},
 		openLoader : function (){
