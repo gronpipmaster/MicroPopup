@@ -5,25 +5,29 @@
 			
 			popup.settings = $.extend({
 				image: true,
-				callback: function (){}
+				callback: function (){},
+				debug: false
 			}, options )
-			
+			if( popup.settings.debug )
+				console.log( 'Start trace:' )
+				
 			methods.data = $( this )
-			methods.settings  = { image: true }
+			methods.settings  = popup.settings
 			
-			methods.loader = $( '.micropopup-loader' )
-			methods.container = $( '.micropopup-container' )
-			methods.overlay = $( '.micropopup-overlay' )
 			
-			if( methods.overlay.length == 0 )
+			
+			if( $( '.micropopup-overlay' ).length == 0 )
 				$( 'body' ).append( '<div class="micropopup-overlay" />' )
 				
-			if( methods.container.length == 0 )
+			if( $( '.micropopup-container' ).length == 0 )
 				$( 'body' ).append( '<div class="micropopup-container"><div class="inner"></div><div class="controls"></div><div class="close"></div></div>' )
 				
-			if( methods.loader.length == 0 )
+			if( $( '.micropopup-loader' ).length == 0 )
 				$( 'body' ).append( '<div class="micropopup-loader" />' )
-
+			
+			methods.overlay = $( '.micropopup-overlay' )
+			methods.container = $( '.micropopup-container' )
+			methods.loader = $( '.micropopup-loader' )
 			
 			
 			if( ! popup.settings.image ){
@@ -56,6 +60,7 @@
 					methods.closeLoader()
 					methods.overlay.show()
 					methods.container.fadeIn(200)
+					methods.debug( 'container show' )
 				})
 			}
 			
@@ -84,7 +89,7 @@
 			methods.container.find( 'form' ).attr( 'action', url )
 			
 			dfd.resolve()
-			
+			methods.debug( 'open popup' )
 		},
 		close : function (){
 			methods.overlay.hide()
@@ -92,6 +97,7 @@
 				methods.container.hide()
 				$( this ).remove()
 			})
+			methods.debug( 'close popup' )
 		},
 		position : function (){
 			methods.container.setPosition = function () {
@@ -119,13 +125,16 @@
 			}
 			
 			methods.container.setPosition()
+			methods.debug( 'position: true' )
 		},
 		sliding : function(){
 			methods.data.each( function( index, value ){
 				$( value ).attr( 'data-index', index )
 			})
 			methods.data.click( function(){
+				
 				methods.slidingAction( $( this ) )
+				methods.debug( 'sliding open' )
 				return false
 			})
 		},
@@ -147,7 +156,7 @@
 				methods.slidingAction( $( this ) )
 				return false
 			})
-			
+			methods.debug( 'slidingBind open' )
 		},
  		slidingAction : function ( link ) {
 
@@ -168,13 +177,19 @@
 			$( image ).attr( 'class', 'resp' )
 			
 			methods.open( image, link.attr('href') )
-
+			methods.debug( 'slidingAction open' )
 		},
 		openLoader : function (){
 			methods.loader.show()
+			methods.debug( 'open Loader' )
 		},
 		closeLoader : function (){
 			methods.loader.hide()
+			methods.debug( 'close Loader' )
+		},
+		debug : function ( message ){
+			if( methods.settings.debug )
+				console.log( message )
 		}
 	}
 	
