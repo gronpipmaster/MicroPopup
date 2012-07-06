@@ -89,6 +89,7 @@
 			methods.container.find( 'form' ).attr( 'action', url )
 			
 			dfd.resolve()
+			
 			methods.debug( 'open popup' )
 		},
 		close : function (){
@@ -102,11 +103,17 @@
 		position : function (){
 			methods.container.setPosition = function () {
 				if( methods.settings.image ) {
-					methods.container.height( $( window ).height() - 80 )
-
-					methods.container.find('img.resp').css({
-						height: methods.container.height()
+					methods.container.css({
+						'max-height' : $( window ).height() - 80,
+						'max-width' : $( window ).width() - 80
 					})
+					
+					methods.container.find('img.resp').css({
+						'max-height': methods.container.height(),
+						'max-width': methods.container.width()
+					})
+					
+					
 				} 
 				var     left = $( window ).width()  - methods.container.width(),
 					top  = $( window ).height() - methods.container.height()
@@ -116,14 +123,14 @@
 				
 				methods.container.css({
 					top: Math.max( top, 0 ),
-					left: Math.max( left, 0),
-					width: methods.container.width(),
-					height: methods.container.height()
+					left: Math.max( left, 0)
 				})
 
 
 			}
-			
+			$( window ).bind('resize',function(e){
+				methods.container.setPosition()
+			})
 			methods.container.setPosition()
 			methods.debug( 'position: true' )
 		},
