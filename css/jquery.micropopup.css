@@ -10,10 +10,10 @@
 .micropopup-container .inner img.resp{display:block;margin:auto;}
 .micropopup-container .controls{position:absolute;top:0;width:100%;height:100%;margin: 0 0 -8px -8px;display:none;}
 
-.micropopup-container .close{background: url('../images/ui/jquery.micropopup/close.png') no-repeat;}
-.micropopup-container .controls .next{background: url('../images/ui/jquery.micropopup/next.png') no-repeat;}
-.micropopup-container .controls .prev{background: url('../images/ui/jquery.micropopup/prev.png') no-repeat;}
-.micropopup-loader{ background: #fff url('../images/ui/jquery.micropopup/loader.gif') no-repeat 50% 50%; }
+.micropopup-container .close{background: url('../images/close.png') no-repeat;}
+.micropopup-container .controls .next{background: url('../images/next.png') no-repeat;}
+.micropopup-container .controls .prev{background: url('../images/prev.png') no-repeat;}
+.micropopup-loader{ background: #fff url('../images/loader.gif') no-repeat 50% 50%; }
 
 
 .micropopup-container .close { position: absolute; right: 2px; top: 2px; width: 31px; height: 28px;cursor: pointer;background-position:0px 0px;}
